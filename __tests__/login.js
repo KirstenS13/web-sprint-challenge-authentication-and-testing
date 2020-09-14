@@ -3,8 +3,6 @@
 // session is sent back to user
 // statusCode = 401 if password wrong
 // statusCode = 401 if username wrong
-// statusCode = 401 if password missing
-// statusCode = 401 if username missing
 // logs in if username and password are correct
 
 // import supertest, our server, and our db
@@ -34,5 +32,29 @@ describe("login integration tests", () => {
         expect(res.statusCode).toBe(200)
         expect(res.type).toBe("application/json")
         expect(res.body.message).toBe("Welcome amy!")
+    })
+
+    it("POST /api/auth/login - wrong username", async () => {
+        const res = await supertest(server)
+            .post("/api/auth/login")
+            .send({
+                username: "amie",
+                password: "abc123"
+            })
+        expect(res.statusCode).toBe(401)
+        expect(res.type).toBe("application/json")
+        expect(res.body.message).toBe("Invalid credentials")
+    })
+
+    it("POST /api/auth/login - wrong password", async () => {
+        const res = await supertest(server)
+            .post("/api/auth/login")
+            .send({
+                username: "amy",
+                password: "abc12"
+            })
+        expect(res.statusCode).toBe(401)
+        expect(res.type).toBe("application/json")
+        expect(res.body.message).toBe("Invalid credentials")
     })
 })

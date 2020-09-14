@@ -27,7 +27,7 @@ describe("registration integration tests", () => {
         const res = await supertest(server)
             .post("/api/auth/register")
             .send({
-                username: "jenny",
+                username: "jen",
                 password: "abc123"
             })
         // statusCode should be 201
@@ -35,7 +35,7 @@ describe("registration integration tests", () => {
         // type should be json
         expect(res.type).toBe("application/json")
         // data should be the object we sent in, with a hashed password
-        expect(res.body.username).toBe("jenny")
+        expect(res.body.username).toBe("jen")
         expect(res.body.id).toBe(4)
         expect(res.body.password).not.toBe("abc123")
     })
