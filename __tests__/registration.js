@@ -37,5 +37,6 @@ describe("registration integration tests", () => {
         // data should be the object we sent in, with a hashed password
         expect(res.body.username).toBe("jenny")
         expect(res.body.id).toBe(1)
+        expect(res.body.password).not.toBe("abc123")
     })
 })
