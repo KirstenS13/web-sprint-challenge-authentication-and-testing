@@ -21,4 +21,15 @@ describe("joke endpoint integration tests", () => {
         expect(res.type).toBe("application/json")
         expect(res.body.message).toBe("Invalid Credentials")
     })
+
+    it("GET /api/jokes - access granted", async () => {
+        const response = await supertest(server)
+            .post("/api/auth/login")
+            .send({
+                username: "amy",
+                password: "abc123"
+            })
+        //console.log(response.res.headers["set-cookie"][0])
+        expect(response.res.headers["set-cookie"]).toHaveLength(1)
+    })
 })
