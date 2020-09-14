@@ -12,9 +12,9 @@ const supertest = require("supertest")
 const server = require("../api/server")
 const db = require("../database/dbConfig")
 
-// clear the database before the first test runs
-beforeAll(async () => {
-    await db("users").truncate()
+// run the seeds before each test
+beforeEach(async () => {
+    await db.seed.run()
 })
 
 // get rid of db connection after all tests are done
@@ -29,7 +29,7 @@ describe("login integration tests", () => {
             .post("/api/auth/login")
             .send({
                 username: "amy",
-                password: "amy123"
+                password: "$2a$14$ZmHxvNoT7VdPdOqKvg61l.b2O2mTulaRAFTpb.xYay1UzAMzknXKe"
             })
         expect(res.statusCode).toBe(200)
         expect(res.type).toBe("application/json")

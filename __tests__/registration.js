@@ -11,9 +11,9 @@ const supertest = require("supertest")
 const server = require("../api/server")
 const db = require("../database/dbConfig")
 
-// clear the database before the first test runs
-beforeAll(async () => {
-    await db("users").truncate()
+// run the seeds before each test
+beforeEach(async () => {
+    await db.seed.run()
 })
 
 // get rid of db connection after all tests are done
@@ -36,7 +36,7 @@ describe("registration integration tests", () => {
         expect(res.type).toBe("application/json")
         // data should be the object we sent in, with a hashed password
         expect(res.body.username).toBe("jenny")
-        expect(res.body.id).toBe(1)
+        expect(res.body.id).toBe(4)
         expect(res.body.password).not.toBe("abc123")
     })
 
@@ -44,7 +44,7 @@ describe("registration integration tests", () => {
         const res = await supertest(server)
             .post("/api/auth/register")
             .send({
-                username: "jenny",
+                username: "amy",
                 password: "def456"
             })
         expect(res.statusCode).toBe(409)
@@ -67,7 +67,7 @@ describe("registration integration tests", () => {
         const res = await supertest(server)
             .post("/api/auth/register")
             .send({
-                username: "danny"
+                username: "amy"
             })
         expect(res.statusCode).toBe(400)
         expect(res.type).toBe("application/json")
