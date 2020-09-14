@@ -29,7 +29,7 @@ describe("login integration tests", () => {
             .post("/api/auth/login")
             .send({
                 username: "amy",
-                password: "$2a$14$ZmHxvNoT7VdPdOqKvg61l.b2O2mTulaRAFTpb.xYay1UzAMzknXKe"
+                password: "abc123"
             })
         expect(res.statusCode).toBe(200)
         expect(res.type).toBe("application/json")
