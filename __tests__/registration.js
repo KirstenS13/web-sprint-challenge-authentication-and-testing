@@ -11,8 +11,8 @@ const supertest = require("supertest")
 const server = require("../api/server")
 const db = require("../database/dbConfig")
 
-// clear the database before each test runs
-beforeEach(async () => {
+// clear the database before the first test runs
+beforeAll(async () => {
     await db("users").truncate()
 })
 
@@ -38,5 +38,39 @@ describe("registration integration tests", () => {
         expect(res.body.username).toBe("jenny")
         expect(res.body.id).toBe(1)
         expect(res.body.password).not.toBe("abc123")
+    })
+
+    it("POST /api/auth/register - username taken", async () => {
+        const res = await supertest(server)
+            .post("/api/auth/register")
+            .send({
+                username: "jenny",
+                password: "def456"
+            })
+        expect(res.statusCode).toBe(409)
+        expect(res.body.message).toBe("Username is already taken. Please choose a different one.")
+        expect(res.type).toBe("application/json")
+    })
+
+    it("POST /api/auth/register - username missing", async () => {
+        const res = await supertest(server)
+            .post("/api/auth/register")
+            .send({
+                password: "abc123"
+            })
+        expect(res.statusCode).toBe(400)
+        expect(res.type).toBe("application/json")
+        expect(res.body.message).toBe("Please provide a username and password")
+    })
+
+    it("POST /api/auth/register - password missing", async () => {
+        const res = await supertest(server)
+            .post("/api/auth/register")
+            .send({
+                username: "danny"
+            })
+        expect(res.statusCode).toBe(400)
+        expect(res.type).toBe("application/json")
+        expect(res.body.message).toBe("Please provide a username and password")
     })
 })
